@@ -19,4 +19,14 @@ class Category extends Model
     {
         return $this->hasMany(self::class, 'parent_id');
     }
+
+    public function fields()
+    {
+        return $this->hasMany(CategoryField::class, 'category_id');
+    }
+
+    public function ads()
+    {
+        return $this->hasMany(Ad::class, 'category_id');
+    } 
 }

@@ -18,4 +18,9 @@ class CategoryField extends Model
     {
         return $this->belongsTo(Category::class,'category_id');
     }
+
+    public function fieldOptions()
+    {
+        return $this->hasMany(CategoryFieldOption::class, 'category_field_id');
+    }
 }
