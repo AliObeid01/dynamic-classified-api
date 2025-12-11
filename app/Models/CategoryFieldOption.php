@@ -24,4 +24,9 @@ class CategoryFieldOption extends Model
     {
         return $this->belongsTo(CategoryField::class,'category_field_id');
     }
+
+    public function adFieldValues()
+    {
+        return $this->hasMany(AdFieldValue::class, 'selected_option_id');
+    }
 }

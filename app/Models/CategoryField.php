@@ -23,4 +23,9 @@ class CategoryField extends Model
     {
         return $this->hasMany(CategoryFieldOption::class, 'category_field_id');
     }
+    public function adFieldValues()
+    {
+        return $this->hasMany(AdFieldValue::class, 'category_field_id');
+    }
+
 }

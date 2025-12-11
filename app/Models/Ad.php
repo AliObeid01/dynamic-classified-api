@@ -23,4 +23,9 @@ class Ad extends Model
     {
         return $this->belongsTo(Category::class,'ad_id');
     }
+
+    public function adFieldValues()
+    {
+        return $this->hasMany(AdFieldValue::class, 'ad_id');
+    }
 }

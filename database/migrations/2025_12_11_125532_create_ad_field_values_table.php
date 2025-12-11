@@ -10,8 +10,8 @@ return new class extends Migration
     {
         Schema::create('ad_field_values', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('ad_id')->constrained()->onDelete('cascade');
-            $table->foreignId('category_field_id')->constrained()->onDelete('cascade');
+            $table->foreignId('ad_id')->constrained('ads')->onDelete('cascade');
+            $table->foreignId('category_field_id')->constrained('category_fields')->onDelete('cascade');
             $table->foreignId('selected_option_id')->nullable()->constrained('category_field_options')->onDelete('set null');
             $table->text('value');
             $table->timestamps();
