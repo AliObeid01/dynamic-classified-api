@@ -3,14 +3,12 @@
 namespace Database\Seeders;
 
 use App\Models\Category;
-use App\Models\CategoryField;
 use App\Models\CategoryFieldOption;
 use App\Models\Field;
 use App\Services\ApiService;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
-use PhpParser\Node\Expr\Cast\Bool_;
 
 class CategoriesSeeder extends Seeder
 {

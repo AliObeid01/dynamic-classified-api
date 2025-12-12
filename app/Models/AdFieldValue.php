@@ -20,7 +20,7 @@ class AdFieldValue extends Model
         return $this->belongsTo(CategoryField::class,'category_field_id');
     }
 
-    public function categoryFieldOption()
+    public function selectedOption()
     {
         return $this->belongsTo(CategoryFieldOption::class,'selected_option_id');
     }

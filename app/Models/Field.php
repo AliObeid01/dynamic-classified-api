@@ -15,9 +15,14 @@ class Field extends Model
         return $this->belongsToMany(Category::class, 'category_fields', 'field_id', 'catgeory_id')->withTimestamps();
     }
 
+    public function categoryFields()
+    {
+        return $this->hasMany(CategoryField::class);
+    }
+
     public function options()
     {
-        return $this->hasMany(CategoryFieldOption::class, 'category_field_option_id');
+        return $this->hasMany(CategoryFieldOption::class);
     }
 
 }

@@ -25,8 +25,13 @@ class Category extends Model
         return $this->belongsToMany(Field::class, 'category_fields', 'category_id', 'field_id')->withTimestamps();
     }
 
-    // public function ads()
-    // {
-    //     return $this->hasMany(Ad::class, 'category_id');
-    // } 
+    public function categoryFields()
+    {
+        return $this->hasMany(CategoryField::class);
+    }
+
+    public function ads()
+    {
+        return $this->hasMany(Ad::class, 'category_id');
+    } 
 }
