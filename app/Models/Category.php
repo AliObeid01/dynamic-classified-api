@@ -22,11 +22,11 @@ class Category extends Model
 
     public function fields()
     {
-        return $this->hasMany(CategoryField::class, 'category_id');
+        return $this->belongsToMany(Field::class, 'category_fields', 'category_id', 'field_id')->withTimestamps();
     }
 
-    public function ads()
-    {
-        return $this->hasMany(Ad::class, 'category_id');
-    } 
+    // public function ads()
+    // {
+    //     return $this->hasMany(Ad::class, 'category_id');
+    // } 
 }

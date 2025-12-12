@@ -10,15 +10,13 @@ return new class extends Migration
     {
         Schema::create('category_field_options', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('category_field_id')->constrained('category_fields')->onDelete('cascade');
-            $table->foreignId('parent_option_id')->nullable()->constrained('category_field_options')->onDelete('cascade');
-            $table->string('slug');
+            $table->foreignId('field_id')->constrained('fields')->onDelete('cascade');
+            $table->foreignId('parent_id')->nullable()->constrained('category_field_options')->onDelete('cascade');
             $table->string('value');
             $table->string('label');
-            $table->string('label_l1');
             $table->timestamps();
 
-            $table->index(['category_field_id', 'value']);
+            $table->index(['value']);
         });
     }
 

@@ -11,14 +11,11 @@ return new class extends Migration
         Schema::create('category_fields', function (Blueprint $table) {
             $table->id();
             $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
-            $table->string('name');
-            $table->string('attribute');
-            $table->string('value_type');
-            $table->string('filter_type');
+            $table->foreignId('field_id')->constrained('fields')->onDelete('cascade');
             $table->boolean('is_mandatory');
             $table->timestamps();
 
-            $table->index('name');
+            $table->unique(['category_id','field_id']);
         });
     }
 
