@@ -1,59 +1,240 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Dynamic Classified Ads API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A RESTful API built with Laravel for a classified ads platform featuring dynamic, category-specific fields.
 
-## About Laravel
+## Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- **Dynamic Category Fields**: Each category has its own set of custom fields (e.g., Cars have mileage, fuel type; Apartments have bedrooms, area)
+- **Laravel Sanctum Authentication**: Secure API token-based authentication
+- **Dynamic Validation**: Validation rules are automatically built based on category field definitions
+- **API Resources**: Clean, transformed JSON responses using Laravel API Resources
+- **Caching**: External API responses are cached for 24 hours
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Requirements
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- PHP 8.2+
+- Composer
+- MySQL
 
-## Learning Laravel
+## Installation
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+```bash
+# Clone the repository
+git clone <repository-url>
+cd dynamic-classified-api
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+# Install dependencies
+composer install
 
-## Laravel Sponsors
+# Copy environment file
+cp .env.example .env
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+# Generate application key
+php artisan key:generate
 
-### Premium Partners
+# Run migrations
+php artisan migrate
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+# Seed categories and fields from OLX API
+php artisan db:seed --class=CategoriesSeeder
+```
 
-## Contributing
+## API Endpoints
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Authentication
 
-## Code of Conduct
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| POST | `/api/v1/auth/register` | Register new user | No |
+| POST | `/api/v1/auth/login` | Login and get token | No |
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
 
-## Security Vulnerabilities
+### Ads
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| POST | `/api/v1/ads` | Create a new ad | Yes |
+| GET | `/api/v1/my-ads` | List user's ads (paginated) | Yes |
+| GET | `/api/v1/ads/{id}` | View a specific ad | No |
 
-## License
+## Usage Examples
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Register a User
+
+```bash
+ POST http://localhost:8000/api/v1/auth/register 
+  "Content-Type: application/json" 
+  {
+    "name": "John Doe",
+    "email": "john@example.com",
+    "password": "password123",
+  }
+```
+
+### Login
+
+```bash
+ POST http://localhost:8000/api/v1/auth/login 
+  "Content-Type: application/json" 
+  {
+    "email": "john@example.com",
+    "password": "password123"
+  }
+```
+
+### Create an Ad
+
+```bash
+ POST http://localhost:8000/api/v1/ads 
+  "Content-Type: application/json" 
+  "Authorization: Bearer {your-token}" 
+   {
+    "category_id": 1,
+    "title": "BMW 320i 2020 Model",
+    "description": "Well maintained car, single owner, full service history.",
+    "price": 25000,
+    "fields": {
+      "mileage": 50000,
+      "fuel_type": "petrol",
+      "transmission": "automatic"
+    }
+  }
+```
+
+### Get My Ads
+
+```bash
+GET "http://localhost:8000/api/v1/my-ads?per_page=10" 
+ "Authorization: Bearer {your-token}"
+```
+
+### View a Specific Ad
+
+```bash
+GET http://localhost:8000/api/v1/ads/1
+```
+
+## Response Format
+
+### Success Response (Create Ad)
+
+```json
+{
+  "success": true,
+  "message": "Ad created successfully",
+  "data": {
+    "id": 1,
+    "title": "BMW 320i 2020 Model",
+    "description": "Well maintained car, single owner, full service history.",
+    "price": 25000.00,
+    "price_formatted": "25,000.00 USD",
+    "category": {
+      "id": 1,
+      "external_id": 23,
+      "name": "Cars for Sale",
+      "slug": "cars-for-sale"
+    },
+    "dynamic_fields": [
+      {
+        "id": 1,
+        "field_name": "Mileage",
+        "field_attribute": "mileage",
+        "field_type": "range",
+        "value": "50000",
+        "display_value": "50000"
+      },
+      {
+        "id": 2,
+        "field_name": "Fuel Type",
+        "field_attribute": "fuel_type",
+        "field_type": "single_choice",
+        "value": "petrol",
+        "display_value": "Petrol"
+      }
+    ],
+    "created_at": "2025-12-11T10:30:00+00:00",
+    "updated_at": "2025-12-11T10:30:00+00:00"
+  }
+}
+```
+
+### Paginated Response (My Ads)
+
+```json
+{
+  "data": [
+    {
+      "id": 1,
+      "title": "BMW 320i 2020 Model",
+      "description": "Well maintained car...",
+      "price": 25000.00,
+      "category": {...},
+      "dynamic_fields": [...]
+    }
+  ],
+  "success": true,
+  "meta": {
+    "current_page": 1,
+    "last_page": 5,
+    "per_page": 15,
+    "total": 67,
+    "from": 1,
+    "to": 15
+  },
+  "links": {
+    "first": "http://localhost:8000/api/v1/my-ads?page=1",
+    "last": "http://localhost:8000/api/v1/my-ads?page=5",
+    "prev": null,
+    "next": "http://localhost:8000/api/v1/my-ads?page=2"
+  }
+}
+```
+
+### Validation Error Response (HTTP 422)
+
+```json
+{
+  "success": false,
+  "message": "Validation failed",
+  "errors": {
+    "title": ["The title field is required."],
+    "fields.mileage": ["The Mileage field is required."]
+  }
+}
+```
+
+### Authentication Error Response (HTTP 401)
+
+```json
+{
+  "success": false,
+  "message": "Unauthenticated.Please login to access this feature."
+}
+```
+
+
+
+## Running Tests
+
+```bash
+php artisan test
+
+# Or run specific test files
+php artisan test --filter=PostAdTest
+```
+
+## Dynamic Validation
+
+The `StoreAdRequest` dynamically builds validation rules based on the selected category's fields:
+
+- **Required fields**: Validated based on `is_mandatory` flag in `category_fields` table
+- **Field types**: Validated based on `value_type` (integer, string, decimal, boolean)
+- **Choice fields**: Validated against allowed options in `category_field_options` table
+
+## Caching
+
+External API calls to fetch categories and category fields are cached for 24 hours to prevent excessive requests. Cache can be cleared using:
+
+```bash
+php artisan cache:clear
+```
